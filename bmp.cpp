@@ -43,3 +43,31 @@ void bmp::read_file(string file_name) {
 
 	in_file.close();
 }
+
+void bmp::write_file(string file_name) {
+	ofstream out_file(file_name, ios::binary);
+	if (!out_file.is_open()) {
+		cout << "File open error!(\n";
+		return;
+	}
+
+	out_file.write((char*)&bmp_head.id[0], sizeof(bmp_head.id[0]));
+	out_file.write((char*)&bmp_head.id[1], sizeof(bmp_head.id[1]));
+	out_file.write((char*)&bmp_head.filesize, sizeof(bmp_head.filesize));
+	out_file.write((char*)&bmp_head.reserved[0], sizeof(bmp_head.reserved[0]));
+	out_file.write((char*)&bmp_head.reserved[1], sizeof(bmp_head.reserved[1]));
+	out_file.write((char*)&bmp_head.headersize, sizeof(bmp_head.headersize));
+	out_file.write((char*)&bmp_head.infoSize, sizeof(bmp_head.infoSize));
+	out_file.write((char*)&bmp_head.width, sizeof(bmp_head.width));
+	out_file.write((char*)&bmp_head.depth, sizeof(bmp_head.depth));
+	out_file.write((char*)&bmp_head.biPlanes, sizeof(bmp_head.biPlanes));
+	out_file.write((char*)&bmp_head.bits, sizeof(bmp_head.bits));
+	out_file.write((char*)&bmp_head.biCompression, sizeof(bmp_head.biCompression));
+	out_file.write((char*)&bmp_head.biSizeImage, sizeof(bmp_head.biSizeImage));
+	out_file.write((char*)&bmp_head.biXPelsPerMeter, sizeof(bmp_head.biXPelsPerMeter));
+	out_file.write((char*)&bmp_head.biYPelsPerMeter, sizeof(bmp_head.biYPelsPerMeter));
+	out_file.write((char*)&bmp_head.biClrUsed, sizeof(bmp_head.biClrUsed));
+	out_file.write((char*)&bmp_head.biClrImportant, sizeof(bmp_head.biClrImportant));
+
+	out_file.close();
+}
