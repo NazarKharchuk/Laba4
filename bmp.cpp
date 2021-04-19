@@ -40,6 +40,23 @@ void bmp::read_file(string file_name) {
 	in_file.read((char*)&bmp_head.biClrImportant, sizeof(bmp_head.biClrImportant));
 	cout << "bmp_head.biClrImportant is :" << bmp_head.biClrImportant << endl;
 
+	in_matr = new PIXELDATA * [bmp_head.depth];
+	for (int n = 0; n < bmp_head.depth; n++) {
+		in_matr[n] = new PIXELDATA[bmp_head.width];
+	}
+
+	PIXELDATA pix;
+	for (int i = 0; i < bmp_head.depth; i++) {
+		for (int j = 0; j < bmp_head.width; j++) {
+			in_file.read((char*)&in_matr[i][j].redComponent, sizeof(in_matr[i][j].redComponent));
+			in_file.read((char*)&in_matr[i][j].greenComponent, sizeof(in_matr[i][j].greenComponent));
+			in_file.read((char*)&in_matr[i][j].blueComponent, sizeof(in_matr[i][j].blueComponent));
+		}
+		for (int n = 0; n < (bmp_head.width % 4); n++) {
+			in_file.read((char*)& pix, sizeof(pix));
+		}
+	}
+
 
 	in_file.close();
 }
@@ -69,5 +86,28 @@ void bmp::write_file(string file_name) {
 	out_file.write((char*)&bmp_head.biClrUsed, sizeof(bmp_head.biClrUsed));
 	out_file.write((char*)&bmp_head.biClrImportant, sizeof(bmp_head.biClrImportant));
 
+	PIXELDATA pix;
+	pix.blueComponent = 0;
+	pix.greenComponent = 0;
+	pix.redComponent = 0;
+
+	for (int i = 0; i < bmp_head.depth; i++) {
+		for (int j = 0; j < bmp_head.width; j++) {
+			out_file.write((char*)&in_matr[i][j].redComponent, sizeof(in_matr[i][j].redComponent));
+			out_file.write((char*)&in_matr[i][j].greenComponent, sizeof(in_matr[i][j].greenComponent));
+			out_file.write((char*)&in_matr[i][j].blueComponent, sizeof(in_matr[i][j].blueComponent));
+		}
+		for (int n = 0; n < (bmp_head.width % 4); n++) {
+			out_file.write((char*)&pix, sizeof(pix));
+		}
+	}
+
 	out_file.close();
+}
+
+bmp::~bmp() {
+	for (int n = 0; n < bmp_head.depth; n++) {
+		delete [] in_matr[n];
+	}
+	delete[]in_matr;
 }

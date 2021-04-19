@@ -37,5 +37,6 @@ public:
     void read_file(string);
     void change_img(int);
     void write_file(string);
+    ~bmp();
 };
 
