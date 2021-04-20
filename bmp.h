@@ -31,11 +31,12 @@ typedef struct {
 
 class bmp{
     BMPHEAD bmp_head;
+    int times;
     PIXELDATA** in_matr;
     PIXELDATA** out_matr;
 public:
     void read_file(string);
-    void change_img(int);
+    void change_img();
     void write_file(string);
     ~bmp();
 };

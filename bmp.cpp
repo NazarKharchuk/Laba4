@@ -45,7 +45,7 @@ void bmp::read_file(string file_name) {
 		in_matr[n] = new PIXELDATA[bmp_head.width];
 	}
 
-	PIXELDATA pix;
+	int8_t pix;
 	for (int i = 0; i < bmp_head.depth; i++) {
 		for (int j = 0; j < bmp_head.width; j++) {
 			in_file.read((char*)&in_matr[i][j].redComponent, sizeof(in_matr[i][j].redComponent));
@@ -68,15 +68,22 @@ void bmp::write_file(string file_name) {
 		return;
 	}
 
+	int32_t new_width = bmp_head.width * times;
+	cout << "New width: " << new_width <<endl;
+	int32_t new_depth = bmp_head.depth * times;
+	cout << "New depth: " << new_depth << endl;
+	int32_t new_filesize = bmp_head.headersize + (new_width * new_depth * 3) + (new_width % 4) * new_depth;
+	cout << "New size: " << new_filesize << endl;
+
 	out_file.write((char*)&bmp_head.id[0], sizeof(bmp_head.id[0]));
 	out_file.write((char*)&bmp_head.id[1], sizeof(bmp_head.id[1]));
-	out_file.write((char*)&bmp_head.filesize, sizeof(bmp_head.filesize));
+	out_file.write((char*)&new_filesize, sizeof(new_filesize));
 	out_file.write((char*)&bmp_head.reserved[0], sizeof(bmp_head.reserved[0]));
 	out_file.write((char*)&bmp_head.reserved[1], sizeof(bmp_head.reserved[1]));
 	out_file.write((char*)&bmp_head.headersize, sizeof(bmp_head.headersize));
 	out_file.write((char*)&bmp_head.infoSize, sizeof(bmp_head.infoSize));
-	out_file.write((char*)&bmp_head.width, sizeof(bmp_head.width));
-	out_file.write((char*)&bmp_head.depth, sizeof(bmp_head.depth));
+	out_file.write((char*)&new_width, sizeof(new_width));
+	out_file.write((char*)&new_depth, sizeof(new_depth));
 	out_file.write((char*)&bmp_head.biPlanes, sizeof(bmp_head.biPlanes));
 	out_file.write((char*)&bmp_head.bits, sizeof(bmp_head.bits));
 	out_file.write((char*)&bmp_head.biCompression, sizeof(bmp_head.biCompression));
@@ -86,18 +93,15 @@ void bmp::write_file(string file_name) {
 	out_file.write((char*)&bmp_head.biClrUsed, sizeof(bmp_head.biClrUsed));
 	out_file.write((char*)&bmp_head.biClrImportant, sizeof(bmp_head.biClrImportant));
 
-	PIXELDATA pix;
-	pix.blueComponent = 0;
-	pix.greenComponent = 0;
-	pix.redComponent = 0;
+	int8_t pix;
 
-	for (int i = 0; i < bmp_head.depth; i++) {
-		for (int j = 0; j < bmp_head.width; j++) {
-			out_file.write((char*)&in_matr[i][j].redComponent, sizeof(in_matr[i][j].redComponent));
-			out_file.write((char*)&in_matr[i][j].greenComponent, sizeof(in_matr[i][j].greenComponent));
-			out_file.write((char*)&in_matr[i][j].blueComponent, sizeof(in_matr[i][j].blueComponent));
+	for (int i = 0; i < bmp_head.depth * times; i++) {
+		for (int j = 0; j < bmp_head.width * times; j++) {
+			out_file.write((char*)&out_matr[i][j].redComponent, sizeof(out_matr[i][j].redComponent));
+			out_file.write((char*)&out_matr[i][j].greenComponent, sizeof(out_matr[i][j].greenComponent));
+			out_file.write((char*)&out_matr[i][j].blueComponent, sizeof(out_matr[i][j].blueComponent));
 		}
-		for (int n = 0; n < (bmp_head.width % 4); n++) {
+		for (int n = 0; n < ((bmp_head.width*times) % 4); n++) {
 			out_file.write((char*)&pix, sizeof(pix));
 		}
 	}
@@ -110,4 +114,28 @@ bmp::~bmp() {
 		delete [] in_matr[n];
 	}
 	delete[]in_matr;
+	for (int n = 0; n < bmp_head.depth * times; n++) {
+		delete[] out_matr[n];
+	}
+	delete[]out_matr;
+}
+
+void bmp::change_img() {
+	//
+	times = 10;
+	//
+	out_matr = new PIXELDATA * [bmp_head.depth * times];
+	for (int n = 0; n < bmp_head.depth * times; n++) {
+		out_matr[n] = new PIXELDATA[bmp_head.width * times];
+	}
+	for (int i = 0; i < bmp_head.depth; i++) {
+		for (int j = 0; j < bmp_head.width; j++) {
+			for (int t = 0; t < times; t++) {
+				out_matr[i * times + t][j * times] = in_matr[i][j];
+				for (int h = 0; h < times; h++) {
+					out_matr[i * times + t][j * times + h] = out_matr[i * times + t][j * times];
+				}
+			}
+		}
+	}
 }
