@@ -140,6 +140,12 @@ void bmp::change_img() {
 		}
 	}
 }
+
+void bmp::setTimes(int X) 
+{
+	times = X;
+}
+
 =======
 RGBQUAD* rgbInfo = new RGBQUAD[fileInfoHeader.biHeight];
 

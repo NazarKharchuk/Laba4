@@ -40,3 +40,4 @@ public:
     ~bmp();
 };
 
+void setTimes(int);
