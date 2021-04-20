@@ -109,6 +109,7 @@ void bmp::write_file(string file_name) {
 	out_file.close();
 }
 
+<<<<<<< Updated upstream
 bmp::~bmp() {
 	for (int n = 0; n < bmp_head.depth; n++) {
 		delete [] in_matr[n];
@@ -139,3 +140,24 @@ void bmp::change_img() {
 		}
 	}
 }
+=======
+RGBQUAD* rgbInfo = new RGBQUAD[fileInfoHeader.biHeight];
+
+for (unsigned int i = 0; i < fileInfoHeader.depth; i++) {
+	rgbInfo[i] = new RGBQUAD[fileInfoHeader.width];
+}
+
+// чтение
+unsigned int bufer;
+
+for (unsigned int i = 0; i < fileInfoHeader.depth; i++) {
+	for (unsigned int j = 0; j < fileInfoHeader.width; j++) {
+		read(fileStream, bufer, fileInfoHeader.biBitCount / 8);
+
+		rgbInfo[i][j].rgbRed = bitextract(bufer, fileInfoHeader.biRedMask);
+		rgbInfo[i][j].rgbGreen = bitextract(bufer, fileInfoHeader.biGreenMask);
+		rgbInfo[i][j].rgbBlue = bitextract(bufer, fileInfoHeader.biBlueMask);
+		rgbInfo[i][j].rgbReserved = bitextract(bufer, fileInfoHeader.biAlphaMask);
+	}
+	fileStream.seekg(linePadding, std::ios_base::cur)
+>>>>>>> Stashed changes

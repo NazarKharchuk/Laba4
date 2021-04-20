@@ -17,7 +17,6 @@ typedef struct {
     int16_t bits;
     int32_t biCompression;
     int32_t biSizeImage;
-    int32_t biXPelsPerMeter;
     int32_t biYPelsPerMeter;
     int32_t biClrUsed;
     int32_t biClrImportant;
