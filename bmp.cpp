@@ -69,11 +69,11 @@ void bmp::write_file(string file_name) {
 	}
 
 	int32_t new_width = bmp_head.width * times;
-	cout << "New width: " << new_width <<endl;
+	//cout << "New width: " << new_width <<endl;
 	int32_t new_depth = bmp_head.depth * times;
-	cout << "New depth: " << new_depth << endl;
+	//cout << "New depth: " << new_depth << endl;
 	int32_t new_filesize = bmp_head.headersize + (new_width * new_depth * 3) + (new_width % 4) * new_depth;
-	cout << "New size: " << new_filesize << endl;
+	//cout << "New size: " << new_filesize << endl;
 
 	out_file.write((char*)&bmp_head.id[0], sizeof(bmp_head.id[0]));
 	out_file.write((char*)&bmp_head.id[1], sizeof(bmp_head.id[1]));
