@@ -36,7 +36,7 @@ class bmp{
     PIXELDATA** out_matr;
 public:
     void read_file(string);
-    void change_img();
+    void change_img(int);
     void write_file(string);
     ~bmp();
     void setTimes(int);

@@ -121,23 +121,41 @@ bmp::~bmp() {
 	delete[]out_matr;
 }
 
-void bmp::change_img() {
+void bmp::change_img(int T) {
 	cout << "Enlarging image " << times << " times...";
 	out_matr = new PIXELDATA * [bmp_head.depth * times];
 	for (int n = 0; n < bmp_head.depth * times; n++) {
 		out_matr[n] = new PIXELDATA[bmp_head.width * times];
 	}
-	for (int i = 0; i < bmp_head.depth; i++) {
-		for (int j = 0; j < bmp_head.width; j++) {
-			for (int t = 0; t < times; t++) {
-				out_matr[i * times + t][j * times] = in_matr[i][j];
-				for (int h = 0; h < times; h++) {
-					out_matr[i * times + t][j * times + h] = out_matr[i * times + t][j * times];
+	if (!T) {
+		for (int i = 0; i < bmp_head.depth; i++) {
+			for (int j = 0; j < bmp_head.width; j++) {
+				for (int t = 0; t < times; t++) {
+					out_matr[i * times + t][j * times] = in_matr[i][j];
+					for (int h = 0; h < times; h++) {
+						out_matr[i * times + t][j * times + h] = out_matr[i * times + t][j * times];
+					}
 				}
 			}
 		}
 	}
-	cout << "Done!" << endl;
+	else {
+		int n, m;
+		for (int i = 0; i < (bmp_head.depth * times); i++) {
+			for (int j = 0; j < (bmp_head.width * times); j++) {
+				/*n = i % times;
+				m = j % times;
+				out_matr[i][j] = in_matr[n][m];*/
+
+			}
+		}
+		for (int i = 0; i < bmp_head.depth; i++) {
+			for (int j = 0; j < bmp_head.width; j++) {
+				out_matr[i][j] = in_matr[i][j];
+			}
+		}
+	}
+	cout << "Done" << endl;
 }
 
 void bmp::setTimes(int X) 
