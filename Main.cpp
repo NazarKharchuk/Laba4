@@ -2,7 +2,8 @@
 
 int main() {
 	string inputName, outputName;
-	int times, T;
+	int times;
+	bool T;
 	cin >> inputName >> outputName >> times>>T;
 	bmp bmp_file;
 	bmp_file.read_file(inputName);
